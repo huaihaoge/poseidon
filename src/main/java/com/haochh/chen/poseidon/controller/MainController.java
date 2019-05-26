@@ -1,11 +1,11 @@
 package com.haochh.chen.poseidon.controller;
 
+import com.haochh.chen.poseidon.bean.ListFish;
+import com.haochh.chen.poseidon.bean.ListNews;
 import com.haochh.chen.poseidon.bean.Result;
 import com.haochh.chen.poseidon.bean.User;
-import com.haochh.chen.poseidon.repository.UserRepository;
+import com.haochh.chen.poseidon.services.ListServices;
 import com.haochh.chen.poseidon.services.UserServices;
-import lombok.extern.log4j.Log4j;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jackson.JsonComponent;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +22,9 @@ public class MainController {
 
     @Autowired
     private UserServices userServices;
+
+    @Autowired
+    private ListServices listServices;
 
     private static Logger log = Logger.getLogger("MainController.class");
 
@@ -51,8 +54,21 @@ public class MainController {
     Result existsUserByNmae(@RequestParam String name) {
         Result result;
         User n = new User(name, "", "");
-        result =userServices.findOneByName(n);
+        result = userServices.findOneByName(n);
         log.info(result.toString());
         return result;
     }
+
+    @GetMapping(path = "listNews")
+    public @ResponseBody
+    ListNews getListNews() {
+        return listServices.getListNews();
+    }
+
+    @GetMapping(path = "listFish")
+    public @ResponseBody
+    ListFish getListFish() {
+        return listServices.getListFish();
+    }
+
 }
