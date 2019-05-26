@@ -14,6 +14,6 @@ public interface UserServices {
 
     public Result exists(User  user);
 
-    public User findOneByName(User user);
+    public Result findOneByName(User user);
 
 }

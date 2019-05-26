@@ -9,5 +9,5 @@ import lombok.Data;
 public class Result {
 
     private boolean ret = true;
-    private String data;
+    private Object data;
 }

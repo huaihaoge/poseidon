@@ -29,7 +29,7 @@ public class UserServicesImp implements UserServices {
     public Result add(User user) {
         Result result = new Result();
         try {
-            if (!StringUtils.isEmpty(findOneByName(user))) {
+            if (findOneByName(user).isRet()) {
                 result.setData("用户名已存在");
                 result.setRet(false);
             } else {
@@ -49,8 +49,14 @@ public class UserServicesImp implements UserServices {
         Result result = new Result();
         try {
             Example<User> example = Example.of(user, matching().withIgnorePaths("email", "id"));
-            result.setData("查询成功");
+
             result.setRet(userRepository.exists(example));
+
+            if(userRepository.exists(example)){
+                result.setData("登录成功");
+            }else {
+                result.setData("用户名或者密码错误");
+            }
         } catch (Exception e) {
 
         }
@@ -59,18 +65,23 @@ public class UserServicesImp implements UserServices {
 
 
     @Override
-    public User findOneByName(User user) {
+    public Result findOneByName(User user) {
+        Result result = new Result();
+        result.setRet(false);
         try {
             Example<User> example = Example.of(user, matching().withMatcher("name", exact())
                     .withIgnorePaths("passwd", "email"));
             Optional<User> optional = userRepository.findOne(example);
+
             if (optional.isPresent()) {
-                return optional.get();
+                result.setData(optional);
+                result.setRet(true);
+                return  result;
             }
-            return null;
+            return result;
         } catch (Exception e) {
 
         }
-        return null;
+        return result;
     }
 }
